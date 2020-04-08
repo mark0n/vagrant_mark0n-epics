@@ -1,0 +1,15 @@
+forge "https://forgeapi.puppetlabs.com"
+
+mod 'mark0n/epics',
+  :git => 'https://github.com/mark0n/mark0n-epics.git',
+  :ref => 'master'
+
+mod 'puppetlabs/inifile', '4.1.0'
+
+mod 'puppet/logrotate', '5.0.0'
+
+mod 'puppetlabs/stdlib', '6.2.0'
+
+mod 'camptocamp/systemd', '2.8.0'
+
+mod 'jgoettsch/telnet', '0.1.0'
