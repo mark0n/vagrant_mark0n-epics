@@ -1,0 +1,5 @@
+.vagrant
+environments/production/.librarian
+environments/production/.tmp
+environments/production/Puppetfile.lock
+environments/production/modules
