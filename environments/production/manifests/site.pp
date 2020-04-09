@@ -3,62 +3,43 @@ node /-standalone/ {
 }
 
 node /-simpleioc/ {
-  file { '/usr/local/lib/iocapps/myioc1':
-    ensure => directory,
+  ['one', 'two'].each |$inst| {
+    file { "/usr/local/lib/iocapps/myioc${inst}":
+      ensure => directory,
+    }
+
+    file { "/usr/local/lib/iocapps/myioc${inst}/iocBoot":
+      ensure => directory,
+    }
+
+    file { "/usr/local/lib/iocapps/myioc${inst}/iocBoot/${inst}":
+      ensure => directory,
+    }
+
+    file { "/usr/local/lib/iocapps/myioc${inst}/iocBoot/${inst}/st.cmd":
+      ensure  => file,
+      content => '#!/usr/bin/softIoc',
+      mode    => '0755',
+    }
   }
 
-  file { '/usr/local/lib/iocapps/myioc1/iocBoot':
-    ensure => directory,
-  }
+  epics::ioc {
+    default:
+      ensure                    => 'running',
+      enable                    => true,
+      run_make                  => false,
+      run_make_after_pkg_update => false,
+      auto_restart_ioc          => false,;
 
-  file { '/usr/local/lib/iocapps/myioc1/iocBoot/one':
-    ensure => directory,
-  }
+    'myiocone':
+      bootdir                   => 'iocBoot/one',
+      console_port              => 4051,
+      require                   => File['/usr/local/lib/iocapps/myiocone/iocBoot/one/st.cmd'],;
 
-  file { '/usr/local/lib/iocapps/myioc1/iocBoot/one/st.cmd':
-    ensure  => file,
-    content => '#!/usr/bin/softIoc',
-    mode    => '0755',
-  }
-
-  epics::ioc { 'myioc1':
-    ensure                    => 'running',
-    enable                    => true,
-    run_make                  => false,
-    run_make_after_pkg_update => false,
-    auto_restart_ioc          => false,
-    bootdir                   => 'iocBoot/one',
-    console_port              => 4051,
-    require                   => File['/usr/local/lib/iocapps/myioc1/iocBoot/one/st.cmd'],
-  }
-
-  file { '/usr/local/lib/iocapps/myioc2':
-    ensure => directory,
-  }
-
-  file { '/usr/local/lib/iocapps/myioc2/iocBoot':
-    ensure => directory,
-  }
-
-  file { '/usr/local/lib/iocapps/myioc2/iocBoot/two':
-    ensure => directory,
-  }
-
-  file { '/usr/local/lib/iocapps/myioc2/iocBoot/two/st.cmd':
-    ensure  => file,
-    content => '#!/usr/bin/softIoc',
-    mode    => '0755',
-  }
-
-  epics::ioc { 'myioc2':
-    ensure                    => 'running',
-    enable                    => true,
-    run_make                  => false,
-    run_make_after_pkg_update => false,
-    auto_restart_ioc          => false,
-    bootdir                   => 'iocBoot/two',
-    console_port              => 4052,
-    require                   => File['/usr/local/lib/iocapps/myioc2/iocBoot/two/st.cmd'],
+    'myioctwo':
+      bootdir                   => 'iocBoot/two',
+      console_port              => 4052,
+      require                   => File['/usr/local/lib/iocapps/myioctwo/iocBoot/two/st.cmd'],;
   }
 }
 
@@ -71,61 +52,42 @@ node /-customioc/ {
     iocbase => '/iocs',
   }
 
-  file { '/iocs/myioc1':
-    ensure => directory,
+  ['one', 'two'].each |$inst| {
+    file { "/iocs/myioc${inst}":
+      ensure => directory,
+    }
+
+    file { "/iocs/myioc${inst}/iocBoot":
+      ensure => directory,
+    }
+
+    file { "/iocs/myioc${inst}/iocBoot/${inst}":
+      ensure => directory,
+    }
+
+    file { "/iocs/myioc${inst}/iocBoot/${inst}/st.cmd":
+      ensure  => file,
+      content => '#!/usr/bin/softIoc',
+      mode    => '0755',
+    }
   }
 
-  file { '/iocs/myioc1/iocBoot':
-    ensure => directory,
-  }
+  epics::ioc {
+    default:
+      ensure                    => 'running',
+      enable                    => true,
+      run_make                  => false,
+      run_make_after_pkg_update => false,
+      auto_restart_ioc          => false,;
 
-  file { '/iocs/myioc1/iocBoot/one':
-    ensure => directory,
-  }
+    'myiocone':
+      bootdir                   => 'iocBoot/one',
+      console_port              => 4051,
+      require                   => File['/iocs/myiocone/iocBoot/one/st.cmd'],;
 
-  file { '/iocs/myioc1/iocBoot/one/st.cmd':
-    ensure  => file,
-    content => '#!/usr/bin/softIoc',
-    mode    => '0755',
-  }
-
-  epics::ioc { 'myioc1':
-    ensure                    => 'running',
-    enable                    => true,
-    run_make                  => false,
-    run_make_after_pkg_update => false,
-    auto_restart_ioc          => false,
-    bootdir                   => 'iocBoot/one',
-    console_port              => 4051,
-    require                   => File['/iocs/myioc1/iocBoot/one/st.cmd'],
-  }
-
-  file { '/iocs/myioc2':
-    ensure => directory,
-  }
-
-  file { '/iocs/myioc2/iocBoot':
-    ensure => directory,
-  }
-
-  file { '/iocs/myioc2/iocBoot/two':
-    ensure => directory,
-  }
-
-  file { '/iocs/myioc2/iocBoot/two/st.cmd':
-    ensure  => file,
-    content => '#!/usr/bin/softIoc',
-    mode    => '0755',
-  }
-
-  epics::ioc { 'myioc2':
-    ensure                    => 'running',
-    enable                    => true,
-    run_make                  => false,
-    run_make_after_pkg_update => false,
-    auto_restart_ioc          => false,
-    bootdir                   => 'iocBoot/two',
-    console_port              => 4052,
-    require                   => File['/iocs/myioc2/iocBoot/two/st.cmd'],
+    'myioctwo':
+      bootdir                   => 'iocBoot/two',
+      console_port              => 4052,
+      require                   => File['/iocs/myioctwo/iocBoot/two/st.cmd'],;
   }
 }
